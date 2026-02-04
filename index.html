@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ARC | Aspect Ratio Calculator</title>
+        <meta name="description" content="Calculate aspect ratios, resize media with confidence, and preview crop or letterbox behavior.">
+        <link rel="stylesheet" href="app.css">
+    </head>
+    <body data-texture="3">
+        <div class="page">
+            <header class="hero">
+                <div class="brand">
+                    <span class="brand-mark">ARC</span>
+                    <div>
+                        <h1>Aspect Ratio Calculator</h1>
+                        <p>made for DoPs and enthusiasts.</p>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="theme-toggle" type="button" data-theme-toggle aria-live="polite">
+                        Theme: Auto
+                    </button>
+                    <button class="texture-toggle" type="button" data-texture-toggle>
+                        Texture: 1
+                    </button>
+                    <button class="reset-btn" type="button" data-reset>
+                        Reset Values
+                    </button>
+                </div>
+            </header>
+
+            <main class="grid">
+                <section class="card calculator">
+                    <div class="card-header">
+                        <h2>Calculator</h2>
+                        <p>fourth value updates instantly</p>
+                    </div>
+
+                    <div class="errors" id="errors" role="status" aria-live="polite"></div>
+
+                    <div class="ratio-grid" id="arc">
+                        <div class="ratio-cell">
+                            <label>
+                                <span>Frame Width</span>
+                                <input type="text" name="x1" value="1920" inputmode="decimal" autocomplete="off">
+                            </label>
+                            <label>
+                                <span>Frame Height</span>
+                                <input type="text" name="y1" value="1080" inputmode="decimal" autocomplete="off">
+                            </label>
+                        </div>
+                        <div class="ratio-divider">=</div>
+                        <div class="ratio-cell">
+                            <label data-prompt-id="arc-w2" data-prompt-text="Type a target width and let ARC solve the rest." data-prompt-delay="1500" data-prompt-display="once">
+                                <span>Target Width</span>
+                                <input type="text" name="x2" value="" inputmode="decimal" autocomplete="off">
+                            </label>
+                            <label>
+                                <span>Target Height</span>
+                                <input type="text" name="y2" value="" inputmode="decimal" autocomplete="off">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="options">
+                        <label class="toggle">
+                            <input type="checkbox" name="round" value="1" checked>
+                            <span>Round results to whole numbers</span>
+                        </label>
+                        <label class="select">
+                            <span>Squeeze Ratio</span>
+                            <select id="squeeze">
+                                <option value="1" selected>1.0x (None)</option>
+                                <option value="1.2">1.2x</option>
+                                <option value="1.5">1.5x</option>
+                                <option value="1.7">1.7x</option>
+                                <option value="2.0">2.0x</option>
+                            </select>
+                        </label>
+                        <label class="select">
+                            <span>Preset ratios</span>
+                            <select id="ratios">
+                                <option value="7680x4320">7680 x 4320 (8K UHD)</option>
+                                <option value="5120x2880">5120 x 2880 (5K iMac)</option>
+                                <option value="3840x2160" selected>3840 x 2160 (4K UHD)</option>
+                                <option value="2048x1536">2048 x 1536 (iPad Retina)</option>
+                                <option value="1920x1200">1920 x 1200 (WUXGA)</option>
+                                <option value="1920x1080">1920 x 1080 (HDTV)</option>
+                                <option value="1334x750">1334 x 750 (iPhone 6)</option>
+                                <option value="1200x630">1200 x 630 (Social)</option>
+                                <option value="1136x640">1136 x 640 (iPhone 5)</option>
+                                <option value="1024x768">1024 x 768 (iPad)</option>
+                                <option value="1024x512">1024 x 512 (Twitter)</option>
+                                <option value="960x640">960 x 640 (iPhone 4)</option>
+                                <option value="800x600">800 x 600</option>
+                                <option value="728x90">728 x 90 (Banner)</option>
+                                <option value="720x576">720 x 576 (PAL)</option>
+                                <option value="640x480">640 x 480 (VGA)</option>
+                                <option value="576x486">576 x 486 (NTSC)</option>
+                                <option value="320x480">320 x 480 (HVGA)</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="ratio-output">
+                        <div>
+                            <p class="label">Aspect Ratio</p>
+                            <p class="value" id="ratio">? : ?</p>
+                            <p class="standard-match" id="standard-match"></p>
+                            <div class="standard-tags" id="standard-tags"></div>
+                            <p class="standard-sensors" id="standard-sensors"></p>
+                        </div>
+                        <div>
+                            <p class="label">Preview</p>
+                            <div class="preview-shell">
+                                <span class="preview-label outside width" id="preview-width"></span>
+                                <span class="preview-label outside height" id="preview-height"></span>
+                                <div id="visual-ratio" aria-hidden="true">
+                                    <div class="preview-grid">
+                                        <span class="preview-line vertical"></span>
+                                        <span class="preview-line horizontal"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sample">
+                        <label class="toggle">
+                            <input type="checkbox" name="sample-display" checked>
+                            <span>Show sample image</span>
+                        </label>
+                        <div class="sample-options hidden" id="croptions">
+                            <label>
+                                <span>Image source</span>
+                                <input type="text" name="sample-url" value="">
+                            </label>
+                            <div class="segmented">
+                                <label>
+                                    <input type="radio" name="crop" value="letterbox">
+                                    <span>Letterbox</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="crop" value="crop" checked>
+                                    <span>Crop</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <footer class="footer">
+                <span>ARC ·</span>
+                <span>Last updated <span id="current-year"></span></span>
+            </footer>
+        </div>
+
+        <noscript>
+            <div class="noscript">
+                JavaScript is required to run the calculator.
+            </div>
+        </noscript>
+
+        <script src="app.js"></script>
+    </body>
+</html>
