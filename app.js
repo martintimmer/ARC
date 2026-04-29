@@ -118,12 +118,19 @@
         cropPanel: "#croptions",
         resetBtn: "[data-reset]",
         themeToggle: "[data-theme-toggle]",
-        textureToggle: "[data-texture-toggle]"
+        textureToggle: "[data-texture-toggle]",
+        lenses: "#lenses",
+        verticalToggle: "#verticalToggle",
+        lut: "#lut",
+        safe90: "#safe-90",
+        safe80: "#safe-80",
+        dragFrame: "#drag-frame"
     };
 
     const state = {
         lastTarget: null,
-        textureIndex: 1
+        textureIndex: 1,
+        vertical: false
     };
 
     const ratioStandards = [
@@ -373,8 +380,9 @@
     }
 
     function getSqueezeFactor() {
-        const value = Number(els.squeeze.value || 1);
-        return Number.isFinite(value) && value > 0 ? value : 1;
+        const lens = Number(els.lenses.value);
+        if (lens) return lens;
+        return Number(els.squeeze.value || 1);
     }
 
     function solve(width, height, numerator, denominator) {
@@ -386,6 +394,65 @@
         }
         return NaN;
     }
+
+    function applyLUT() {
+        const lut = els.lut.value;
+
+        const map = {
+            none: "none",
+            rec709: "contrast(1.1) saturate(1.2)",
+            film: "contrast(1.2) sepia(0.2)",
+            log: "contrast(0.8) brightness(1.1)"
+        };
+
+        els.visual.style.filter = map[lut] || "none";
+    }
+
+    function updateSafeAreas(width, height) {
+        const draw = (el, pct) => {
+            const w = width * pct;
+            const h = height * pct;
+            el.style.position = "absolute";
+            el.style.border = "1px dashed white";
+            el.style.width = w + "px";
+            el.style.height = h + "px";
+            el.style.left = (width - w) / 2 + "px";
+            el.style.top = (height - h) / 2 + "px";
+        };
+
+        draw(els.safe90, 0.9);
+        draw(els.safe80, 0.8);
+    }
+
+    function initDrag() {
+        let dragging = false;
+        let startX, startY;
+
+        els.visual.addEventListener("mousedown", (e) => {
+            dragging = true;
+            startX = e.offsetX;
+            startY = e.offsetY;
+
+            els.dragFrame.style.display = "block";
+            els.dragFrame.style.left = startX + "px";
+            els.dragFrame.style.top = startY + "px";
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            if (!dragging) return;
+
+            const rect = els.visual.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            els.dragFrame.style.width = Math.abs(x - startX) + "px";
+            els.dragFrame.style.height = Math.abs(y - startY) + "px";
+        });
+
+        window.addEventListener("mouseup", () => dragging = false);
+    }
+
+    const originalUpdateVisual = updateVisual;
 
     function updateVisual(numerator, denominator, targetWidth, targetHeight) {
         const visual = els.visual;
@@ -421,6 +488,10 @@
             els.previewWidth.textContent = "";
             els.previewHeight.textContent = "";
         }
+
+        const rect = els.visual.getBoundingClientRect();
+        updateSafeAreas(rect.width, rect.height);
+        applyLUT();
     }
 
     function showError(message) {
@@ -624,6 +695,14 @@
         qa(selectors.cropOptions).forEach((input) => {
             input.addEventListener("change", updateSampleFit);
         });
+
+        els.lut.addEventListener("change", applyLUT);
+
+        els.verticalToggle.addEventListener("click", () => {
+            state.vertical = !state.vertical;
+            els.visual.style.transform = state.vertical ? "rotate(90deg)" : "none";
+            compute(els.x1);
+        });
     }
 
     function initYear() {
@@ -639,6 +718,7 @@
         initYear();
         updateSampleVisibility();
         resetValues();
+        initDrag();
     }
 
     document.addEventListener("DOMContentLoaded", init);
