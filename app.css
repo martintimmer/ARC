@@ -57,7 +57,7 @@ body {
     font-family: var(--font-body);
     background-color: #07080b;
     background-image:
-        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.25'/></svg>");
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='s[...]
     background-size: 320px 320px;
     background-repeat: repeat;
     color: var(--text);
@@ -67,13 +67,13 @@ body {
 
 body[data-texture="2"] {
     background-image:
-        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.22'/></svg>");
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTil[...]
     background-size: 420px 420px;
 }
 
 body[data-texture="3"] {
     background-image:
-        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.3'/></svg>");
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='4' stitchTile[...]
     background-size: 360px 360px;
 }
 
@@ -540,4 +540,63 @@ textarea:focus {
     opacity: 1;
     transform: translate(0, -50%);
     pointer-events: auto;
+}
+
+/* === NEW: Preview Overlays & Tools === */
+
+/* Ensure preview is a positioning context */
+#visual-ratio {
+    position: relative;
+}
+
+/* --- SAFE AREAS (Broadcast) --- */
+#safe-90,
+#safe-80 {
+    position: absolute;
+    pointer-events: none;
+    border: 1px dashed rgba(255,255,255,0.6);
+    z-index: 3;
+}
+
+#safe-90 {
+    border-color: rgba(255,255,255,0.6);
+}
+
+#safe-80 {
+    border-color: rgba(255,200,0,0.7);
+}
+
+/* --- CINEMA / DELIVERY OVERLAYS --- */
+#safe-dci,
+#safe-netflix {
+    position: absolute;
+    pointer-events: none;
+    z-index: 3;
+}
+
+#safe-dci {
+    border: 1px solid rgba(255, 80, 80, 0.7);
+}
+
+#safe-netflix {
+    border: 1px solid rgba(80, 255, 120, 0.7);
+}
+
+/* --- DRAG FRAME (Crop Tool) --- */
+#drag-frame {
+    position: absolute;
+    border: 2px solid var(--accent);
+    background: rgba(255, 77, 45, 0.15);
+    display: none;
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* --- Ensure overlays are above sample image --- */
+#visual-ratio img {
+    z-index: 1;
+}
+
+.preview-grid {
+    z-index: 2;
 }
