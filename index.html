@@ -27,6 +27,9 @@
                     <button class="reset-btn" type="button" data-reset>
                         Reset Values
                     </button>
+                    <button id="verticalToggle" type="button">
+                        Vertical: Off
+                    </button>
                 </div>
             </header>
 
@@ -73,9 +76,31 @@
                             <select id="squeeze">
                                 <option value="1" selected>1.0x (None)</option>
                                 <option value="1.2">1.2x</option>
+                                <option value="1.3">1.3x</option>
+                                <option value="1.33">1.33x</option>
                                 <option value="1.5">1.5x</option>
+                                <option value="1.6">1.6x</option>
+                                <option value="1.66">1.66x</option>
                                 <option value="1.7">1.7x</option>
+                                <option value="1.75">1.75x</option>
                                 <option value="2.0">2.0x</option>
+                            </select>
+                        </label>
+                        <label class="select">
+                            <span>Lens Presets</span>
+                            <select id="lenses">
+                                <option value="">Manual</option>
+                                <option value="1.33">Atlas Orion</option>
+                                <option value="1.6">Atlas Mercury</option>
+                                <option value="2.0">Cooke</option>
+                                <option value="2.0">ARRI Master</option>
+                                <option value="1.8">Hawk V-Lite</option>
+                                <option value="1.5">Panavision Ultra</option>
+                                <option value="2.0">Panavision C</option>
+                                <option value="1.33">Sirui</option>
+                                <option value="1.6">Sirui 1.6</option>
+                                <option value="1.33">Laowa Nanomorph</option>
+                                <option value="1.5">Laowa Proteus</option>
                             </select>
                         </label>
                         <label class="select">
@@ -99,6 +124,17 @@
                                 <option value="640x480">640 x 480 (VGA)</option>
                                 <option value="576x486">576 x 486 (NTSC)</option>
                                 <option value="320x480">320 x 480 (HVGA)</option>
+                                <option value="5888x3312">Panasonic S1 II 5.9K</option>
+                                <option value="6240x3510">Fuji X-H2S 6.2K</option>
+                            </select>
+                        </label>
+                        <label class="select">
+                            <span>LUT Preview</span>
+                            <select id="lut">
+                                <option value="none">None</option>
+                                <option value="rec709">Rec709</option>
+                                <option value="film">Film</option>
+                                <option value="log">Log</option>
                             </select>
                         </label>
                     </div>
@@ -121,6 +157,14 @@
                                         <span class="preview-line vertical"></span>
                                         <span class="preview-line horizontal"></span>
                                     </div>
+                                    <!-- Safe Areas -->
+                                    <div id="safe-90"></div>
+                                    <div id="safe-80"></div>
+                                    <!-- Standard Overlays -->
+                                    <div id="safe-dci"></div>
+                                    <div id="safe-netflix"></div>
+                                    <!-- Drag Frame -->
+                                    <div id="drag-frame"></div>
                                 </div>
                             </div>
                         </div>
